@@ -87,9 +87,10 @@ Welcome to the **Football Online Manager** project! This web application allows 
      ```
    - Create a `.env` file and add the following environment variables:
      ```env
+     PORT=4000
      JWT_SECRET=your_secret_key
      MONGO_URI=mongodb+srv://root:root3124@mongocluster.mqxfd.mongodb.net/FantasyLeaguePro?retryWrites=true&w=majority&appName=MongoCluster 
-     URI is for testing purpose only
+     (If you don't have a MongoDB Atlas account, you can use the above URI for testing purposes only.)
      ```
    - Start the backend server:
      ```bash
