@@ -30,25 +30,34 @@ export const getPlayerDetails = async (req, res, next) => {
 export const addPlayerToTeam = async (req, res, next) => {
   const { playerId, teamId } = req.body;
   try {
-    const team = await Team.findById(teamId);
+    // Validate team and player existence
+    const [team, player] = await Promise.all([
+      Team.findById(teamId),
+      Player.findById(playerId),
+    ]);
+
     if (!team) {
       return next(new HttpError("Team not found", 404));
     }
-    
-    const player = await Player.findById(playerId);
+
     if (!player) {
       return next(new HttpError("Player not found", 404));
     }
 
-    // Check if the team has space for this player
+    // Check if the team has enough budget
     const remainingBudget = team.checkBudget(player.price);
-    team.budget = remainingBudget; // Update team budget
+    if (remainingBudget < 0) {
+      return next(new HttpError("Insufficient budget to add player", 400));
+    }
+
+    // Update team budget and add player to team
+    team.budget = remainingBudget;
     team.players.push(playerId);
 
     await team.save();
     res.status(201).json({ message: "Player added successfully to the team", team });
   } catch (err) {
-    return next(new HttpError("Could not add player to team", 500));
+    return next(new HttpError("Could not add player to team, please try again later.", 500));
   }
 };
 
@@ -61,12 +70,12 @@ export const removePlayerFromTeam = async (req, res, next) => {
       return next(new HttpError("Player not found in any team", 404));
     }
 
-    // Remove the player from the team
+    // Remove player from team's player list
     team.players = team.players.filter(playerId => playerId.toString() !== id);
-
     await team.save();
+
     res.status(200).json({ message: "Player removed from the team", team });
   } catch (err) {
-    return next(new HttpError("Could not remove player from team", 500));
+    return next(new HttpError("Could not remove player from team, please try again later.", 500));
   }
 };

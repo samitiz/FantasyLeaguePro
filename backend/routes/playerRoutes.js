@@ -9,8 +9,8 @@ import { authenticateJWT } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Route to get all players (public or restricted based on your use case)
-router.get("/", authenticateJWT, getAllPlayers); // Optional: If you want to secure it with JWT authentication
+// Route to get all players
+router.get("/", authenticateJWT, getAllPlayers);
 
 // Route to get details of a specific player
 router.get("/:id", authenticateJWT, getPlayerDetails);

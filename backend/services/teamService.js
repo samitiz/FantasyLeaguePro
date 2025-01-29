@@ -2,7 +2,6 @@
 import TeamModel from "../models/Team.js";
 import PlayerModel from "../models/Player.js";
 
-// Define player roles and their counts
 const PLAYER_CONFIG = {
   Goalkeeper: 3,
   Defender: 6,
@@ -10,7 +9,6 @@ const PLAYER_CONFIG = {
   Attacker: 5,
 };
 
-// Function to generate random player names
 const generatePlayerName = (role, index) => `${role}-Player-${index + 1}`;
 
 // Function to create players for a team
@@ -31,23 +29,18 @@ const createPlayers = async (teamId) => {
 
 // Function to create a team for a user
 const createTeam = async (userId, teamName) => {
-  // Create team
   const team = await TeamModel.create({
     name: teamName,
     user: userId,
-    budget: 5000000, // $5,000,000
+    budget: 5000000, 
   });
 
-  // Generate players for the team
   const players = await createPlayers(team._id);
 
   // Associate the players with the team
   team.players = players.map((player) => player._id);
 
-  // Save the team after assigning players
   await team.save();
-
-  // Return the team with players
   return { team, players };
 };
 

@@ -15,7 +15,7 @@ import {
 import { blue, red, green, grey } from '@mui/material/colors';
 import { useNavigate } from 'react-router-dom';
 
-const Team = () => {
+const Dashboard = () => {
   const [team, setTeam] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -137,4 +137,4 @@ const Team = () => {
   );
 };
 
-export default Team;
+export default Dashboard;

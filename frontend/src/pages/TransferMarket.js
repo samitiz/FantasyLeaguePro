@@ -14,7 +14,9 @@ import {
   InputLabel,
   FormControl,
   CircularProgress,
+
 } from '@mui/material';
+import { blue, grey, red, green } from '@mui/material/colors';
 
 const TransferMarket = () => {
   const [players, setPlayers] = useState([]); // Market players
@@ -39,7 +41,7 @@ const TransferMarket = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      setPlayers(response.data || []); // Ensure array
+      setPlayers(response.data || []);
     } catch (err) {
       console.error('Error fetching players:', err);
     } finally {
@@ -55,7 +57,7 @@ const TransferMarket = () => {
         },
       });
 
-      setTeamPlayers(response.data.team.players || []); // Ensure array
+      setTeamPlayers(response.data.team.players || []); 
       setUserTeamId(response.data.team._id);
     } catch (err) {
       console.error('Error fetching team players:', err);
@@ -124,18 +126,23 @@ const TransferMarket = () => {
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem' }}>
+      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem', color: blue[700] }}>
         Transfer Market
       </Typography>
 
       {/* Player Listing Filters */}
-      <Box display="flex" justifyContent="space-between" sx={{ marginBottom: '1rem' }}>
+      <Box display="flex" justifyContent="space-between" sx={{ marginBottom: '2rem' }}>
         <TextField
           label="Search Players"
           variant="outlined"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           sx={{ flex: 1, marginRight: '1rem' }}
+          InputProps={{
+            sx: {
+              borderRadius: '8px',
+            },
+          }}
         />
         <TextField
           label="Filter by Team"
@@ -143,6 +150,11 @@ const TransferMarket = () => {
           value={filterTeam}
           onChange={(e) => setFilterTeam(e.target.value)}
           sx={{ flex: 1, marginRight: '1rem' }}
+          InputProps={{
+            sx: {
+              borderRadius: '8px',
+            },
+          }}
         />
         <TextField
           label="Max Price"
@@ -150,17 +162,26 @@ const TransferMarket = () => {
           value={filterPrice}
           onChange={(e) => setFilterPrice(e.target.value)}
           sx={{ flex: 1 }}
+          InputProps={{
+            sx: {
+              borderRadius: '8px',
+            },
+          }}
         />
       </Box>
 
       {/* Add Player to Market */}
-      <Box sx={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <Typography variant="h6" sx={{ marginBottom: '1rem' }}>
+      <Box sx={{ marginBottom: '3rem', textAlign: 'center', backgroundColor: grey[50], padding: '2rem', borderRadius: '8px' }}>
+        <Typography variant="h6" sx={{ marginBottom: '1rem', color: blue[700] }}>
           List a Player for Sale
         </Typography>
         <FormControl sx={{ minWidth: 200, marginRight: '1rem' }}>
           <InputLabel>Select Player</InputLabel>
-          <Select value={selectedPlayer} onChange={(e) => setSelectedPlayer(e.target.value)}>
+          <Select
+            value={selectedPlayer}
+            onChange={(e) => setSelectedPlayer(e.target.value)}
+            sx={{ borderRadius: '8px' }}
+          >
             {teamPlayers.length > 0 ? (
               teamPlayers.map((player) => (
                 <MenuItem key={player._id} value={player._id}>
@@ -178,9 +199,9 @@ const TransferMarket = () => {
           variant="outlined"
           value={askingPrice}
           onChange={(e) => setAskingPrice(e.target.value)}
-          sx={{ marginRight: '1rem' }}
+          sx={{ marginRight: '1rem', borderRadius: '8px' }}
         />
-        <Button variant="contained" onClick={addPlayerToMarket}>
+        <Button variant="contained" onClick={addPlayerToMarket} sx={{ borderRadius: '8px', backgroundColor: green[600], '&:hover': { backgroundColor: green[700] } }}>
           Add to Market
         </Button>
       </Box>
@@ -191,21 +212,32 @@ const TransferMarket = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           {filteredPlayers.map((player) => (
             <Grid item xs={12} sm={6} md={4} key={player._id}>
-              <Card sx={{ boxShadow: 3, borderRadius: '8px', textAlign: 'center' }}>
+              <Card sx={{ boxShadow: 3, borderRadius: '8px', textAlign: 'center', '&:hover': { boxShadow: 6 } }}>
                 <CardContent>
-                  <Typography variant="h6">{player.name}</Typography>
-                  <Typography variant="body1">Team: {player.team?.name || 'N/A'}</Typography>
-                  <Typography variant="body2">Price: ${player.price.toLocaleString()}</Typography>
+                  <Typography variant="h6" sx={{ marginBottom: '1rem', color: blue[700] }}>
+                    {player.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: grey[600] }}>
+                    Team: {player.team?.name || 'N/A'}
+                  </Typography>
+                  <Typography variant="body2" sx={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
+                    Price: ${player.price.toLocaleString()}
+                  </Typography>
                   {player.availableForSale ? (
                     player.team?._id === userTeamId ? (
                       <Button
                         variant="contained"
                         color="secondary"
                         onClick={() => removePlayerFromMarket(player._id)}
-                        sx={{ marginTop: '1rem' }}
+                        sx={{
+                          marginTop: '1rem',
+                          borderRadius: '8px',
+                          backgroundColor: red[600],
+                          '&:hover': { backgroundColor: red[700] },
+                        }}
                       >
                         Remove from Market
                       </Button>
@@ -213,8 +245,13 @@ const TransferMarket = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => buyPlayer(player._id, player.price, userTeamId, player.team._id, )}
-                        sx={{ marginTop: '1rem' }}
+                        onClick={() => buyPlayer(player._id, player.price, userTeamId, player.team._id)}
+                        sx={{
+                          marginTop: '1rem',
+                          borderRadius: '8px',
+                          backgroundColor: green[600],
+                          '&:hover': { backgroundColor: green[700] },
+                        }}
                       >
                         Buy Player
                       </Button>
