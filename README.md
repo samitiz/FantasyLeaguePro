@@ -57,7 +57,7 @@ Welcome to the **Football Online Manager** project! This web application allows 
 
 ### Frontend
 - **React.js**: The frontend is built with React, utilizing hooks and context for state management.
-- **UI Library**: **Ant Design** is used for UI components such as forms, tables, and modals.
+- **UI Library**: **Material UI** is used for UI components such as forms, tables, and modals.
 - **React Router** is used for navigation and routing between pages.
 
 ---
